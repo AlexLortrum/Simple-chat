@@ -1,7 +1,7 @@
 all: client server
 
 client: src/client.cpp src/clientmain.cpp src/socket.cpp src/other.cpp
-	g++ src/client.cpp src/clientmain.cpp src/socket.cpp src/other.cpp -o bin/client
+	g++ src/client.cpp src/clientmain.cpp src/socket.cpp src/other.cpp -o ./client
 
 server: src/server.cpp src/servermain.cpp src/socket.cpp src/other.cpp
-	g++ src/server.cpp src/servermain.cpp src/socket.cpp src/other.cpp -o bin/server
+	g++ src/server.cpp src/servermain.cpp src/socket.cpp src/other.cpp -o ./server
