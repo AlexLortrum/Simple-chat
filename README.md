@@ -1,4 +1,4 @@
-# Simple-chat
+# Simple-chat for Linux
 > A simple multi-user chat
 ### Compile
 ```
