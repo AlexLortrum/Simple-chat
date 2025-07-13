@@ -1,5 +1,6 @@
 #include <cctype>
 #include <cstring>
+#include <string>
 #include "../include/other.h"
 
 int char_to_int(char* number)
@@ -13,5 +14,16 @@ int char_to_int(char* number)
 		res = (((int) number[i] - '0') * digit_unit) + res;
 		digit_unit *= 10;
 	}
+	return res;
+}
+
+int hash(std::string word, int mul_value)
+{
+	int res = 0;
+	for (int i = 0; i < word.size(); i++)
+	{
+		res += word[i];
+	}
+	res *= mul_value;
 	return res;
 }
