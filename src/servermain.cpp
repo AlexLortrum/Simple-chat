@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <poll.h>
 #include <errno.h>
@@ -18,11 +19,13 @@ int main(int argc, char* argv[])
 	std::vector<struct pollfd> pollfds;
 	struct pollfd socket;
 	socket.events = POLLIN;
-	std::string buffer;
+	struct message buffer;
+	std::stringstream textbuffer;
+	buffer.id = 0;
 
-	Server test(AF_INET, std::string(argv[1]), char_to_int(argv[2]));
-	if (test.init(AF_INET, SOCK_STREAM, 0) == 1) return 1;
-	socket.fd = test.getfd(0);
+	Server server(AF_INET, std::string(argv[1]), char_to_int(argv[2]));
+	socket.fd = server.init(AF_INET, SOCK_STREAM, 0); // listener fd
+	if (socket.fd == 1) return 1;
 	pollfds.push_back(socket);
 	while (1)
 	{
@@ -40,7 +43,7 @@ int main(int argc, char* argv[])
 				{
 					if (i == 0) // new user connection
 					{
-						socket.fd = test.accept();
+						socket.fd = server.accept();
 						if (socket.fd > 0)
 						{
 							pollfds.push_back(socket);
@@ -48,19 +51,25 @@ int main(int argc, char* argv[])
 					}
 					else
 					{
-						res = test.recv(pollfds[i].fd, &buffer);
-						if (buffer.compare("exit") == 0 || res == 1) 
+						res = server.recv(pollfds[i].fd, &buffer);
+						buffer.id = server.getuserid(pollfds[i].fd);
+						if (strcmp(buffer.text, "exit") == 0 || res == 1) 
 						{
-							test.close(i);
+							server.close(i);
 							pollfds.erase(pollfds.begin() + i);
 							if (pollfds.size() == 1)
 							{
-								test.closeAll();
+								server.closeAll();
 								return 0;
-							};
+							}
+							
+							textbuffer << buffer.username << "(" << buffer.id << "):" << "leaves the chat";
+							strcpy(buffer.text, std::string(textbuffer.str()).c_str());
+							buffer.id = 0;
+							strcpy(buffer.username, "Server");
 						}
-						else test.sendAll(buffer);
-						buffer = "";
+						server.sendAll(buffer);
+						memset(buffer.text, 0, BUFFER_SIZE);
 					}
 				}
 			}
