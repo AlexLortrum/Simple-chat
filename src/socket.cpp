@@ -63,9 +63,9 @@ int Socket::connect(struct sockaddr *addr, socklen_t addrlen)
 	return 0;
 }
 
-int Socket::send(std::string message)
+int Socket::send(struct message message)
 {
-	int res = ::send(socketfd, message.c_str(), message.size(), 0);
+	int res = ::send(socketfd, &message, sizeof(message), 0);
 	if (res == -1)
 	{
 		std::cout << "Message send failed\nCode:" << errno << std::endl;
@@ -74,10 +74,10 @@ int Socket::send(std::string message)
 	return 0;
 }
 
-int Socket::recv(std::string *message)
+int Socket::recv(struct message *message)
 {
-	char buffer[BUFFER_SIZE] = {0};
-	int res = ::recv(socketfd, buffer, BUFFER_SIZE, 0);
+	struct message buffer;
+	int res = ::recv(socketfd, &buffer, sizeof(struct message), 0);
 	if (res == -1)
 	{
 		std::cout << "Message recv failed\nCode:" << errno << std::endl;
