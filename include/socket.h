@@ -4,6 +4,14 @@
 #include <string>
 
 #define BUFFER_SIZE 128
+#define NAME_SIZE 16
+
+struct message
+{
+	int id;
+	char username[NAME_SIZE];
+	char text[BUFFER_SIZE];
+};
 
 class Socket
 {
@@ -13,8 +21,8 @@ class Socket
 		int listen(int backlog);
 		int accept(struct sockaddr *addr, socklen_t *addrlen);
 		int connect(struct sockaddr *addr, socklen_t addrlen);
-		int send(std::string message);
-		int recv(std::string *message);
+		int send(struct message message);
+		int recv(struct message *message);
 		int getsockfd();
 		void close();		
 	private:
