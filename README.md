@@ -9,5 +9,5 @@ make all
 ### Usage
 ```
 ./server ip_address port
-./client ip_address port 
+./client ip_address port username
 ```
